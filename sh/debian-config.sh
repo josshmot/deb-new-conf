@@ -7,6 +7,8 @@ then
 fi
 
 # --------SETUP WORKING AREA--------
+echo "Setting up working area..."
+
 # Get working directory (we this is run from run.sh then it should be the root of that script)
 working_dir=$(pwd)
 
@@ -15,11 +17,15 @@ $temp_dir="$work_dir/tmp"
 mkdir $temp_dir
 
 # --------GRUB CONFIG--------
+echo "Setting up grub defaults..."
+
 # Copy GRUB config & run update-grub
 cp ./res/grub_default /etc/default/grub
 update-grub
 
 # --------APT & NALA CONFIG--------
+echo "Configuring apt and nala..."
+
 # Copy apt sources.list
 cp ./res/apt_sources.list /etc/apt/sources.list
 
@@ -33,10 +39,14 @@ apt update; apt install nala -y
 nala upgrade -y
 
 # --------INSTALL NVIDIA DRIVERS--------
+echo "Installing Nvidia drivers..."
+
 # Install nvidia-driver
 nala install nvidia-driver -y
 
 # --------CLONE REPOS--------
+echo "Setting up git..."
+
 # Install git, gcm
 nala install git
 
@@ -54,7 +64,8 @@ git config --global credential.credentialStore secretservice
 # ONLY IF ~/repos/ DOESN'T ALREADY EXIST:
 if [[ ! -d "~/repos" ]]
 then
-
+    echo "Setting up repos directory..."
+    
     # mkdir ~/repos/extern/ if it doesn't already exist
     mkdir ~/repos/extern
 
@@ -84,6 +95,8 @@ then
     cp ~/repos/extern/bassmix24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Release/net8.0/linux-x64/publish/
     cp ~/repos/extern/bassenc24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Release/net8.0/linux-x64/publish/
 
+else
+    echo "Repos directory already exists. Skipping."
 # --------INSTALL ASUSCTL--------
 # Install asusctl dependancies
 
