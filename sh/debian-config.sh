@@ -40,7 +40,7 @@ nala install nvidia-driver -y
 # Install git, gcm
 nala install git
 
-wget -P ./tmp $(cat ./config/gcm_bin_url) # we will remove this temporary file later
+wget -P $temp_dir $(cat ./config/gcm_bin_url) # we will remove this temporary file later
 nala install ./tmp/gcm-linux_amd64*
 
 # Set git user.name & configure gcm
@@ -52,16 +52,37 @@ git-credential-manager configure
 git config --global credential.credentialStore secretservice
 
 # ONLY IF ~/repos/ DOESN'T ALREADY EXIST:
-
+if [[ ! -d "~/repos" ]]
+then
 
     # mkdir ~/repos/extern/ if it doesn't already exist
-
+    mkdir ~/repos/extern
 
     # clone github repos to ~/repos/
-
+    cd ~/repos
+    cat $working_dir/config/git_repos | while read repo_url
+    do
+        git clone repo_url
+    done
+    cd $working_dir
 
     # Download BASS binaries to ~/repos/extern/ and configure to run seamlessly with CVAS repo
+    wget -P $temp_dir https://www.un4seen.com/files/bass24-linux.zip
+    wget -P $temp_dir https://www.un4seen.com/files/bassmix24-linux.zip
+    wget -P $temp_dir https://www.un4seen.com/files/bassenc24-linux.zip
+    unzip -d ~/repos/extern/bass24-linux $temp_dir/bass24-linux.zip
+    unzip -d ~/repos/extern/bassmix24-linux $temp_dir/bassmix24-linux.zip
+    unzip -d ~/repos/extern/bassenc24-linux $temp_dir/bassenc24-linux.zip
 
+    mkdir ~/repos/CVAS/CVAS.Main/bin/Debug/net8.0/
+    mkdir ~/repos/CVAS/CVAS.Main/bin/Release/net8.0/linux-x64/publish/
+
+    cp ~/repos/extern/bass24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Debug/net8.0/
+    cp ~/repos/extern/bassmix24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Debug/net8.0/
+    cp ~/repos/extern/bassenc24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Debug/net8.0/
+    cp ~/repos/extern/bass24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Release/net8.0/linux-x64/publish/
+    cp ~/repos/extern/bassmix24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Release/net8.0/linux-x64/publish/
+    cp ~/repos/extern/bassenc24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Release/net8.0/linux-x64/publish/
 
 # --------INSTALL ASUSCTL--------
 # Install asusctl dependancies
