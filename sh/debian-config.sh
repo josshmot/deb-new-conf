@@ -31,10 +31,18 @@ nala install nvidia-driver -y
 
 # --------CLONE REPOS--------
 # Install git, gcm
+nala install git
 
+wget -P ./tmp $(cat ./config/gcm_bin_url) # we will remove this temporary file later
+nala install ./tmp/gcm-linux_amd64*
 
 # Set git user.name & configure gcm
+git config --global user.name josshmot
+git config --global user.email $(cat ./offline/github_email)
 
+git-credential-manager configure
+
+git config --global credential.credentialStore secretservice
 
 # ONLY IF ~/repos/ DOESN'T ALREADY EXIST:
 
