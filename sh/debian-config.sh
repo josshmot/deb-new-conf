@@ -37,7 +37,7 @@ cp ./res/apt_sources.list /etc/apt/sources.list
 dpkg --add-architecture i386
 
 # apt update && install nala
-apt update -qq; apt install -qq nala -y
+apt update -qq; apt -qq install nala -y
 
 # Perform apt upgrade
 echo "Upgrading packages..."
