@@ -9,17 +9,21 @@ fi
 
 # --------GRUB CONFIG--------
 # Copy GRUB config & run update-grub
-
+cp ./res/grub_default /etc/default/grub
+update-grub
 
 # --------APT & NALA CONFIG--------
 # Copy apt sources.list
+cp ./res/apt_sources.list /etc/apt/sources.list
 
+# Add i386 architecture
+dpkg --add-architecture i386
 
-# Perform apt update & upgrade
+# apt update && install nala
+apt update; apt install nala -y
 
-
-# Install nala
-
+# Perform nala upgrade
+nala upgrade -y
 
 # --------INSTALL NVIDIA DRIVERS--------
 # Install nvidia-driver
