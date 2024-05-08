@@ -11,12 +11,12 @@ echo "Setting up working area..."
 
 # Get working directory (we this is run from run.sh then it should be the root of that script)
 working_dir=$(pwd)
+echo $working_dir
 
 # Create tmp directory, which we'll remove at the end
-temp_dir="$work_dir"/tmp
+temp_dir="$working_dir"/tmp
+echo $temp_dir
 mkdir "$temp_dir"
-
-read
 
 # --------GRUB CONFIG--------
 echo "Setting up grub defaults..."
@@ -24,8 +24,6 @@ echo "Setting up grub defaults..."
 # Copy GRUB config & run update-grub
 cp ./res/grub_default /etc/default/grub
 update-grub
-
-read
 
 # --------APT & NALA CONFIG--------
 echo "Configuring apt and nala..."
@@ -37,19 +35,17 @@ cp ./res/apt_sources.list /etc/apt/sources.list
 dpkg --add-architecture i386
 
 # apt update && install nala
-apt update -qq; apt -qq install nala -y
+apt update -qq; apt install nala -qq -y
 
 # Perform apt upgrade
 echo "Upgrading packages..."
-apt -qq upgrade -y
-
-read
+apt upgrade -qq -y
 
 # --------INSTALL NVIDIA DRIVERS--------
 echo "Installing Nvidia drivers..."
 
 # Install nvidia-driver
-apt -qq install nvidia-driver -y
+apt install nvidia-driver -qq -y
 
 read
 
@@ -57,12 +53,12 @@ read
 echo "Setting up git..."
 
 # Install git, gcm
-apt -qq install git
+apt install git -qq
 
 gcm_bin_url=$(cat ./config/gcm_bin_url)
 gcm_bin_fname=$(basename "$gcm_bin_url")
 wget -P "$temp_dir" "$gcm_bin_url" # we will remove this temporary file later
-apt -qq install ./tmp/"$gcm_bin_fname"
+apt install ./tmp/"$gcm_bin_fname" -qq
 
 # Set git user.name & configure gcm
 git config --global user.name josshmot
@@ -80,7 +76,7 @@ then
     echo "Setting up repos directory..."
     
     # mkdir ~/repos/extern/ if it doesn't already exist
-    mkdir ~/repos/extern
+    mkdir -p ~/repos/extern
 
     # clone github repos to ~/repos/
     cd ~/repos
@@ -99,12 +95,13 @@ then
 
         # download and unzip
         wget -P "$temp_dir" "$bass24_url"
+        mkdir -p $bass24_dir
         unzip -d "$bass24_dir" "$temp_dir"/"$bass24_zip"
 
         # copy libs to required directories
         cat "$working_dir"/config/bass24_outdirs | while read bass24_outdir
         do
-            mkdir "$bass24_outdir"
+            mkdir -p "$bass24_outdir"
             cp "$bass24_dir"/libx/x86_64/. "$bass24_outdir"
         done
     done
