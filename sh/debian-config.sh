@@ -10,7 +10,7 @@ fi
 echo "Setting up working area..."
 
 # Get working directory (we this is run from run.sh then it should be the root of that script)
-working_dir="$(pwd)"
+working_dir=$(pwd)
 
 # Create tmp directory, which we'll remove at the end
 temp_dir="$work_dir"/tmp
@@ -59,8 +59,8 @@ echo "Setting up git..."
 # Install git, gcm
 apt -qq install git
 
-gcm_bin_url="$(cat ./config/gcm_bin_url)"
-gcm_bin_fname="$(basename "$gcm_bin_url")"
+gcm_bin_url=$(cat ./config/gcm_bin_url)
+gcm_bin_fname=$(basename "$gcm_bin_url")
 wget -P "$temp_dir" "$gcm_bin_url" # we will remove this temporary file later
 apt -qq install ./tmp/"$gcm_bin_fname"
 
@@ -94,8 +94,8 @@ then
     cat "$working_dir"/config/bass24_liburls | while read bass24_url
     do
         # get zip filename and output dir
-        bass24_zip="$(basename $bass24_url)"
-        bass24_dir=~/repos/extern/"${bass24_zip%.*}"
+        bass24_zip=$(basename $bass24_url)
+        bass24_dir=~/repos/extern/${bass24_zip%.*}
 
         # download and unzip
         wget -P "$temp_dir" "$bass24_url"
