@@ -78,25 +78,27 @@ then
     cd $working_dir
 
     # Download BASS binaries to ~/repos/extern/ and configure to run seamlessly with CVAS repo
-    wget -P $temp_dir https://www.un4seen.com/files/bass24-linux.zip
-    wget -P $temp_dir https://www.un4seen.com/files/bassmix24-linux.zip
-    wget -P $temp_dir https://www.un4seen.com/files/bassenc24-linux.zip
-    unzip -d ~/repos/extern/bass24-linux $temp_dir/bass24-linux.zip
-    unzip -d ~/repos/extern/bassmix24-linux $temp_dir/bassmix24-linux.zip
-    unzip -d ~/repos/extern/bassenc24-linux $temp_dir/bassenc24-linux.zip
+    cat $working_dir/config/bass24_liburls | while read bass24_url
+    do
+        # get zip filename and output dir
+        bass24_zip=$(basename $bass24_url)
+        bass24_dir="~/repos/extern/${bass24_zip%.*}"
 
-    mkdir ~/repos/CVAS/CVAS.Main/bin/Debug/net8.0/
-    mkdir ~/repos/CVAS/CVAS.Main/bin/Release/net8.0/linux-x64/publish/
+        # download and unzip
+        wget -P $temp_dir $bass24_url
+        unzip -d $bass24_dir $temp_dir/$bass24_zip
 
-    cp ~/repos/extern/bass24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Debug/net8.0/
-    cp ~/repos/extern/bassmix24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Debug/net8.0/
-    cp ~/repos/extern/bassenc24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Debug/net8.0/
-    cp ~/repos/extern/bass24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Release/net8.0/linux-x64/publish/
-    cp ~/repos/extern/bassmix24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Release/net8.0/linux-x64/publish/
-    cp ~/repos/extern/bassenc24-linux/libs/x86_64/. ~/repos/CVAS/CVAS.Main/bin/Release/net8.0/linux-x64/publish/
-
+        # copy libs to required directories
+        cat $working_dir/config/bass24_outdirs | while read bass24_outdir
+        do
+            mkdir $bass24_outdir
+            cp $bass24_dir/libx/x86_64/. $bass24_outdir
+        done
+    done
 else
     echo "Repos directory already exists. Skipping."
+fi
+
 # --------INSTALL ASUSCTL--------
 # Install asusctl dependancies
 
