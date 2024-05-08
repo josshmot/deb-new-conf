@@ -10,11 +10,11 @@ fi
 echo "Setting up working area..."
 
 # Get working directory (we this is run from run.sh then it should be the root of that script)
-working_dir=$(pwd)
+working_dir="$(pwd)"
 
 # Create tmp directory, which we'll remove at the end
-temp_dir=$work_dir/tmp
-mkdir $temp_dir
+temp_dir="$work_dir"/tmp
+mkdir "$temp_dir"
 
 # --------GRUB CONFIG--------
 echo "Setting up grub defaults..."
@@ -50,10 +50,10 @@ echo "Setting up git..."
 # Install git, gcm
 nala install --simple git
 
-gcm_bin_url=$(cat ./config/gcm_bin_url)
-gcm_bin_fname=$(basename $gcm_bin_url)
-wget -P $temp_dir $gcm_bin_url # we will remove this temporary file later
-nala install --simple ./tmp/$gcm_bin_fname
+gcm_bin_url="$(cat ./config/gcm_bin_url)"
+gcm_bin_fname="$(basename "$gcm_bin_url")"
+wget -P "$temp_dir" "$gcm_bin_url" # we will remove this temporary file later
+nala install --simple ./tmp/"$gcm_bin_fname"
 
 # Set git user.name & configure gcm
 git config --global user.name josshmot
@@ -73,28 +73,28 @@ then
 
     # clone github repos to ~/repos/
     cd ~/repos
-    cat $working_dir/config/git_repos | while read repo_url
+    cat "$working_dir"/config/git_repos | while read repo_url
     do
-        git clone $repo_url
+        git clone "$repo_url"
     done
-    cd $working_dir
+    cd "$working_dir"
 
     # Download BASS binaries to ~/repos/extern/ and configure to run seamlessly with CVAS repo
-    cat $working_dir/config/bass24_liburls | while read bass24_url
+    cat "$working_dir"/config/bass24_liburls | while read bass24_url
     do
         # get zip filename and output dir
-        bass24_zip=$(basename $bass24_url)
-        bass24_dir="~/repos/extern/${bass24_zip%.*}"
+        bass24_zip="$(basename $bass24_url)"
+        bass24_dir=~/repos/extern/"${bass24_zip%.*}"
 
         # download and unzip
-        wget -P $temp_dir $bass24_url
-        unzip -d $bass24_dir $temp_dir/$bass24_zip
+        wget -P "$temp_dir" "$bass24_url"
+        unzip -d "$bass24_dir" "$temp_dir"/"$bass24_zip"
 
         # copy libs to required directories
-        cat $working_dir/config/bass24_outdirs | while read bass24_outdir
+        cat "$working_dir"/config/bass24_outdirs | while read bass24_outdir
         do
-            mkdir $bass24_outdir
-            cp $bass24_dir/libx/x86_64/. $bass24_outdir
+            mkdir "$bass24_outdir"
+            cp "$bass24_dir"/libx/x86_64/. "$bass24_outdir"
         done
     done
 else
