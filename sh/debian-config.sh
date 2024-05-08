@@ -6,6 +6,13 @@ then
     exit
 fi
 
+# --------SETUP WORKING AREA--------
+# Get working directory (we this is run from run.sh then it should be the root of that script)
+working_dir=$(pwd)
+
+# Create tmp directory, which we'll remove at the end
+$temp_dir="$work_dir/tmp"
+mkdir $temp_dir
 
 # --------GRUB CONFIG--------
 # Copy GRUB config & run update-grub
