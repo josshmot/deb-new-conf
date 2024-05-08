@@ -27,7 +27,7 @@ nala upgrade -y
 
 # --------INSTALL NVIDIA DRIVERS--------
 # Install nvidia-driver
-
+nala install nvidia-driver -y
 
 # --------CLONE REPOS--------
 # Install git, gcm
