@@ -16,12 +16,16 @@ working_dir="$(pwd)"
 temp_dir="$work_dir"/tmp
 mkdir "$temp_dir"
 
+read
+
 # --------GRUB CONFIG--------
 echo "Setting up grub defaults..."
 
 # Copy GRUB config & run update-grub
 cp ./res/grub_default /etc/default/grub
 update-grub
+
+read
 
 # --------APT & NALA CONFIG--------
 echo "Configuring apt and nala..."
@@ -38,11 +42,15 @@ apt update -qq; apt install -qq nala -y
 # Perform nala upgrade
 nala upgrade --simple -y
 
+read
+
 # --------INSTALL NVIDIA DRIVERS--------
 echo "Installing Nvidia drivers..."
 
 # Install nvidia-driver
 nala install --simple nvidia-driver -y
+
+read
 
 # --------CLONE REPOS--------
 echo "Setting up git..."
@@ -62,6 +70,8 @@ git config --global user.email $(cat ./offline/github_email)
 git-credential-manager configure
 
 git config --global credential.credentialStore secretservice
+
+read
 
 # ONLY IF ~/repos/ DOESN'T ALREADY EXIST:
 if [[ ! -d "~/repos" ]]
@@ -100,6 +110,8 @@ then
 else
     echo "Repos directory already exists. Skipping."
 fi
+
+read
 
 # --------INSTALL ASUSCTL--------
 # Install asusctl dependancies
