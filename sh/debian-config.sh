@@ -13,7 +13,7 @@ echo "Setting up working area..."
 working_dir=$(pwd)
 
 # Create tmp directory, which we'll remove at the end
-$temp_dir="$work_dir/tmp"
+temp_dir=$work_dir/tmp
 mkdir $temp_dir
 
 # --------GRUB CONFIG--------
@@ -73,7 +73,7 @@ then
     cd ~/repos
     cat $working_dir/config/git_repos | while read repo_url
     do
-        git clone repo_url
+        git clone $repo_url
     done
     cd $working_dir
 
