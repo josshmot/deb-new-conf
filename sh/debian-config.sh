@@ -11,11 +11,9 @@ echo "Setting up working area..."
 
 # Get working directory (we this is run from run.sh then it should be the root of that script)
 working_dir=$(pwd)
-echo $working_dir
 
 # Create tmp directory, which we'll remove at the end
 temp_dir="$working_dir"/tmp
-echo $temp_dir
 mkdir "$temp_dir"
 
 # --------GRUB CONFIG--------
@@ -47,8 +45,6 @@ echo "Installing Nvidia drivers..."
 # Install nvidia-driver
 apt install nvidia-driver -qq -y
 
-read
-
 # --------CLONE REPOS--------
 echo "Setting up git..."
 
@@ -67,8 +63,6 @@ git config --global user.email $(cat ./offline/github_email)
 git-credential-manager configure
 
 git config --global credential.credentialStore secretservice
-
-read
 
 # ONLY IF ~/repos/ DOESN'T ALREADY EXIST:
 if [[ ! -d "~/repos" ]]
@@ -108,8 +102,6 @@ then
 else
     echo "Repos directory already exists. Skipping."
 fi
-
-read
 
 # --------INSTALL ASUSCTL--------
 # Install asusctl dependancies
