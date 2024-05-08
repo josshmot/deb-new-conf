@@ -33,28 +33,28 @@ cp ./res/apt_sources.list /etc/apt/sources.list
 dpkg --add-architecture i386
 
 # apt update && install nala
-apt update -qq; apt install nala -qq -y
+apt update 2>/dev/null >/dev/null; apt install nala -y 2>/dev/null >/dev/null
 
 # Perform apt upgrade
 echo "Upgrading packages..."
-apt upgrade -qq -y
+apt upgrade -y 2>/dev/null >/dev/null
 
 # --------INSTALL NVIDIA DRIVERS--------
 echo "Installing Nvidia drivers..."
 
 # Install nvidia-driver
-apt install nvidia-driver -qq -y
+apt install nvidia-driver -y 2>/dev/null >/dev/null
 
 # --------CLONE REPOS--------
 echo "Setting up git..."
 
 # Install git, gcm
-apt install git -qq
+apt install git -y 2>/dev/null >/dev/null
 
 gcm_bin_url=$(cat ./config/gcm_bin_url)
 gcm_bin_fname=$(basename "$gcm_bin_url")
 wget -P "$temp_dir" "$gcm_bin_url" # we will remove this temporary file later
-apt install ./tmp/"$gcm_bin_fname" -qq
+apt install ./tmp/"$gcm_bin_fname" -y 2>/dev/null >/dev/null
 
 # Set git user.name & configure gcm
 git config --global user.name josshmot
