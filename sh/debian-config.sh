@@ -39,8 +39,9 @@ dpkg --add-architecture i386
 # apt update && install nala
 apt update -qq; apt install -qq nala -y
 
-# Perform nala upgrade
-nala upgrade --simple -y
+# Perform apt upgrade
+echo "Upgrading packages..."
+apt -qq upgrade -y
 
 read
 
@@ -48,7 +49,7 @@ read
 echo "Installing Nvidia drivers..."
 
 # Install nvidia-driver
-nala install --simple nvidia-driver -y
+apt -qq install nvidia-driver -y
 
 read
 
@@ -56,12 +57,12 @@ read
 echo "Setting up git..."
 
 # Install git, gcm
-nala install --simple git
+apt -qq install git
 
 gcm_bin_url="$(cat ./config/gcm_bin_url)"
 gcm_bin_fname="$(basename "$gcm_bin_url")"
 wget -P "$temp_dir" "$gcm_bin_url" # we will remove this temporary file later
-nala install --simple ./tmp/"$gcm_bin_fname"
+apt -qq install ./tmp/"$gcm_bin_fname"
 
 # Set git user.name & configure gcm
 git config --global user.name josshmot
