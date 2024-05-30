@@ -191,6 +191,9 @@ else
     echo -e "Repos directory already exists. Skipping."
 fi
 
+# --------INSTALL DOTNET--------
+
+
 # --------INSTALL KDE DESKTOP--------
 
 
