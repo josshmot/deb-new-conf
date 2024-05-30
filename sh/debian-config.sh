@@ -61,7 +61,7 @@ echo -e "-> Added x86 architecture"
 
 # apt update && install nala
 echo -e "-> Updating apt package lists..."
-apt update 2>/dev/null
+apt update &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -70,7 +70,7 @@ fi
 echo -e "---> Package lists updated!"
 
 echo -e "-> Installing nala..."
-apt install nala -y 2>/dev/null
+apt install nala -y &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -80,7 +80,7 @@ echo -e "---> Nala installed!"
 
 # Perform apt upgrade
 echo "-> Upgrading packages..."
-apt upgrade -y 2>/dev/null
+apt upgrade -y &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -93,7 +93,7 @@ echo -e ""
 echo "Installing Nvidia drivers. This could take some time..."
 
 # Install nvidia-driver
-apt install nvidia-driver -y 2>/dev/null
+apt install nvidia-driver -y &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -106,7 +106,7 @@ echo -e ""
 echo -e "Setting up git..."
 
 # Install git, gcm
-apt install git -y 2>/dev/null
+apt install git -y &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
