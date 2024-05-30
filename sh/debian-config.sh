@@ -105,17 +105,17 @@ echo -e "-> Configured git credentials"
 echo -e ""
 
 # ONLY IF ~/repos/ DOESN'T ALREADY EXIST:
-if [[ ! -d "~/repos" ]]
+if [[ ! -d "$home/repos" ]]
 then
     echo -e "Setting up repos directory..."
     
     # mkdir ~/repos/extern/ if it doesn't already exist
-    mkdir -p ~/repos/extern
+    mkdir -p $home/repos/extern
     echo -e "-> Created ~/repos/ and ~/repos/extern/"
 
     # clone github repos to ~/repos/
     echo -e "-> Cloning repos:"
-    cd ~/repos
+    cd $home/repos
     cat "$working_dir"/config/git_repos | while read repo_url
     do
         git clone "$repo_url"
@@ -129,7 +129,7 @@ then
     do
         # get zip filename and output dir
         bass24_zip=$(basename $bass24_url)
-        bass24_dir=~/repos/extern/${bass24_zip%.*}
+        bass24_dir=$home/repos/extern/${bass24_zip%.*}
         echo -e "---> $bass24_dir"
 
         # download and unzip
