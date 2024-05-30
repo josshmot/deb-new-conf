@@ -13,7 +13,7 @@ then
     exit
 fi
 
-home = $1
+home=$1
 echo $home
 exit
 
