@@ -14,6 +14,6 @@ home=$(readlink -f ~/)
 echo -e "-> User directory is: '$home'"
 
 # Elevate to root and run primary script in bash so that we can use our fancy bash commands
-echo ""
+echo -e ""
 echo -e "This script now requires root access via sudo to install components. Please enter your password if requested."
 sudo bash ./sh/debian-config.sh $home
