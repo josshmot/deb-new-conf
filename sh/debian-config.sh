@@ -2,19 +2,29 @@
 # Verify this has root permissions
 if [[ $(id -u) != 0 ]]
 then
-    echo -e "This script requires root permisions to run. Please run as root or with the sudo command."
+    echo -e "This script requires root permisions to run. Please run as root or with the sudo command!"
     exit
 fi
+
+# --------CHECK HOME DIR PROVIDED--------
+if [[ $# != 1 ]]
+then
+    echo -e "User directory not provided! Aborting!"
+    exit
+fi
+
+home = $1
+echo $home
+exit
 
 # --------SETUP WORKING AREA--------
 echo "Setting up working area..."
 
-# Get working directory (we this is run from run.sh then it should be the root of that script)
-working_dir=$(pwd)
-
-# Create tmp directory, which we'll remove at the end
-temp_dir="$working_dir"/tmp
-mkdir "$temp_dir"
+# Create folder in /tmp, copy contents of iso there and set working directory
+working_dir=/tmp/deb-new-conf
+mkdir $working_dir
+cp -r ./ $working_dir/
+echo -e "Created '$working_dir' and copied files from source."
 
 # --------GRUB CONFIG--------
 echo "Setting up grub defaults..."
@@ -53,7 +63,7 @@ apt install git -y 2>/dev/null >/dev/null
 
 gcm_bin_url=$(cat ./config/gcm_bin_url)
 gcm_bin_fname=$(basename "$gcm_bin_url")
-wget -P "$temp_dir" "$gcm_bin_url" # we will remove this temporary file later
+wget -P "$working_dir" "$gcm_bin_url"
 apt install ./tmp/"$gcm_bin_fname" -y 2>/dev/null >/dev/null
 
 # Set git user.name & configure gcm
@@ -88,9 +98,9 @@ then
         bass24_dir=~/repos/extern/${bass24_zip%.*}
 
         # download and unzip
-        wget -P "$temp_dir" "$bass24_url"
+        wget -P "$working_dir" "$bass24_url"
         mkdir -p $bass24_dir
-        unzip -d "$bass24_dir" "$temp_dir"/"$bass24_zip"
+        unzip -d "$bass24_dir" "$working_dir"/"$bass24_zip"
 
         # copy libs to required directories
         cat "$working_dir"/config/bass24_outdirs | while read bass24_outdir
