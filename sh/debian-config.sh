@@ -7,8 +7,8 @@ fi
 
 home=$1
 logfile=$2
-echo -e "" >> "$logfile"
-echo -e "--------debian-config.sh--------" >> "$logfile"
+echo -e "" | tee -a $logfile &>/dev/null
+echo -e "--------debian-config.sh--------" | tee -a $logfile &>/dev/null
 
 # --------CHECK ROOT--------
 echo -e "Verifying elevation to root..."
@@ -25,17 +25,17 @@ echo -e "Setting up working area..."
 
 # Create folder in /tmp, copy contents of iso there and set working directory
 working_dir=/tmp/deb-new-conf
-mkdir $working_dir &>> "$logfile"
-cp -r ./ $working_dir/ &>> "$logfile"
+mkdir $working_dir | tee -a $logfile &>/dev/null
+cp -r ./ $working_dir/ | tee -a $logfile &>/dev/null
 echo -e "-> Created '$working_dir' and copied files from source"
 
 # --------GRUB CONFIG--------
 echo -e "Setting up grub defaults..."
 
 # Copy GRUB config & run update-grub
-cp ./res/grub_default /etc/default/grub &>> "$logfile"
+cp ./res/grub_default /etc/default/grub | tee -a $logfile &>/dev/null
 echo -e "-> Copied new grub config file: grub will now update..."
-update-grub &>> "$logfile"
+update-grub | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -48,16 +48,16 @@ echo -e "---> Grub updated!"
 echo -e "Configuring apt and nala..."
 
 # Copy apt sources.list
-cp ./res/apt_sources.list /etc/apt/sources.list &>> "$logfile"
+cp ./res/apt_sources.list /etc/apt/sources.list | tee -a $logfile &>/dev/null
 echo -e "-> Copied new sources.list"
 
 # Add i386 architecture
-dpkg --add-architecture i386 &>> "$logfile"
+dpkg --add-architecture i386 | tee -a $logfile &>/dev/null
 echo -e "-> Added x86 architecture"
 
 # apt update && install nala
 echo -e "-> Updating apt package lists..."
-apt update &>> "$logfile"
+apt update | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -66,7 +66,7 @@ fi
 echo -e "---> Package lists updated!"
 
 echo -e "-> Installing nala..."
-apt install nala -y &>> "$logfile"
+apt install nala -y | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -76,7 +76,7 @@ echo -e "---> Nala installed!"
 
 # Perform apt upgrade
 echo "-> Upgrading packages..."
-nala upgrade -y &>> "$logfile"
+nala upgrade -y | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -88,7 +88,7 @@ echo -e "---> Upgrade complete!"
 echo "Installing Nvidia drivers. This could take some time..."
 
 # Install nvidia-driver
-nala install nvidia-driver -y &>> "$logfile"
+nala install nvidia-driver -y | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -100,7 +100,7 @@ echo -e "-> Nvidia drivers installed."
 echo -e "Setting up git..."
 
 # Install git, gcm
-nala install git -y &>> "$logfile"
+nala install git -y | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -110,14 +110,14 @@ echo -e "-> Installed git"
 
 gcm_bin_url=$(cat ./config/gcm_bin_url)
 gcm_bin_fname=$(basename "$gcm_bin_url")
-wget -P "$working_dir" "$gcm_bin_url" &>> "$logfile"
+wget -P "$working_dir" "$gcm_bin_url" | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
     exit
 fi
 echo -e "-> Downloaded GCM"
-nala install $working_dir/$gcm_bin_fname -y &>> "$logfile"
+nala install $working_dir/$gcm_bin_fname -y | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -126,18 +126,18 @@ fi
 echo -e "-> Installed GCM"
 
 # Set git user.name & configure gcm
-git config --global user.name josshmot &>> "$logfile"
-git config --global user.email $(cat ./offline/github_email) &>> "$logfile"
+git config --global user.name josshmot | tee -a $logfile &>/dev/null
+git config --global user.email $(cat ./offline/github_email) | tee -a $logfile &>/dev/null
 echo -e "-> Configured git username and email"
 
-git-credential-manager configure &>> "$logfile"
+git-credential-manager configure | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
     exit
 fi
 
-git config --global credential.credentialStore secretservice &>> "$logfile"
+git config --global credential.credentialStore secretservice | tee -a $logfile &>/dev/null
 
 echo -e "-> Configured git credentials"
 
@@ -149,15 +149,15 @@ then
     echo -e "Setting up repos directory..."
     
     # mkdir ~/repos/extern/ if it doesn't already exist
-    mkdir -p $home/repos/extern &>> "$logfile"
+    mkdir -p $home/repos/extern | tee -a $logfile &>/dev/null
     echo -e "-> Created ~/repos/ and ~/repos/extern/"
 
     # clone github repos to ~/repos/
     echo -e "-> Cloning repos:"
-    cd $home/repos &>> "$logfile"
+    cd $home/repos | tee -a $logfile &>/dev/null
     cat "$working_dir"/config/git_repos | while read repo_url
     do
-        git clone "$repo_url" &>> "$logfile"
+        git clone "$repo_url" | tee -a $logfile &>/dev/null
         if [[ $? != 0 ]]
         then
             echo -e "An error occurred, aborting!"
@@ -177,15 +177,15 @@ then
         echo -e "---> $bass24_dir"
 
         # download and unzip
-        wget -P "$working_dir" "$bass24_url" &>> "$logfile"
+        wget -P "$working_dir" "$bass24_url" | tee -a $logfile &>/dev/null
         if [[ $? != 0 ]]
         then
             echo -e "An error occurred, aborting!"
             exit
         fi
         echo -e "-----> Downloaded"
-        mkdir -p $bass24_dir &>> "$logfile"
-        unzip -d "$bass24_dir" "$working_dir"/"$bass24_zip" &>> "$logfile"
+        mkdir -p $bass24_dir | tee -a $logfile &>/dev/null
+        unzip -d "$bass24_dir" "$working_dir"/"$bass24_zip" | tee -a $logfile &>/dev/null
         if [[ $? != 0 ]]
         then
             echo -e "An error occurred, aborting!"
@@ -196,8 +196,8 @@ then
         # copy libs to required directories
         cat "$working_dir"/config/bass24_outdirs | while read bass24_outdir
         do
-            mkdir -p "$home/$bass24_outdir" &>> "$logfile"
-            cp -r "$bass24_dir"/libx/x86_64/. "$home/$bass24_outdir" &>> "$logfile"
+            mkdir -p "$home/$bass24_outdir" | tee -a $logfile &>/dev/null
+            cp -r "$bass24_dir"/libx/x86_64/. "$home/$bass24_outdir" | tee -a $logfile &>/dev/null
             if [[ $? != 0 ]]
             then
                 echo -e "An error occurred, aborting!"
