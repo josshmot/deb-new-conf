@@ -80,7 +80,7 @@ echo -e "---> Nala installed!"
 
 # Perform apt upgrade
 echo "-> Upgrading packages..."
-apt upgrade -y &>/dev/null
+nala upgrade -y 1>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -93,7 +93,7 @@ echo -e ""
 echo "Installing Nvidia drivers. This could take some time..."
 
 # Install nvidia-driver
-apt install nvidia-driver -y &>/dev/null
+nala install nvidia-driver -y 1>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -106,7 +106,7 @@ echo -e ""
 echo -e "Setting up git..."
 
 # Install git, gcm
-apt install git -y &>/dev/null
+nala install git -y 1>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
@@ -123,7 +123,7 @@ then
     exit
 fi
 echo -e "-> Downloaded GCM"
-apt install ./tmp/"$gcm_bin_fname" -y 2>/dev/null
+nala install ./tmp/"$gcm_bin_fname" -y 1>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
