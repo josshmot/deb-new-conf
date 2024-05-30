@@ -217,6 +217,9 @@ else
     echo -e "Repos directory already exists. Skipping."
 fi
 
+# --------INSTALL KDE DESKTOP--------
+
+
 # --------INSTALL ASUSCTL--------
 # Install asusctl dependancies
 
