@@ -1,9 +1,24 @@
-log_try () { # Help function to automatically log output, and terminate script upon some failed command
+# Help function to automatically log output, and terminate script upon some failed command
+log_try () {
     $@ &>> "$logfile"
     if [[ $? != 0 ]]
     then
+        cleanup
         exit 1
     fi
+}
+
+# Executed at the end of the script or upon some error - cleans up temp directory
+cleanup () {
+    # MAKE SURE NO SPOOKY "rm -rf /"s CAN SNEAK IN HERE - only allow deleting things in /tmp/
+    if [[ $temp_dir != "/tmp/"* ]]
+    then
+        echo -e "Something has gone horribly wrong - tried to clean up temp directory, but it's not in /tmp!"
+        echo -e "Aborting to avoid deleting anything important."
+        log_try echo -e "BEEG PROBLEM: Failed to cleanup temp directory, as it wasn't in /tmp"
+        exit 1
+    fi
+    rm -rf $temp_dir
 }
 
 # --------GET LOGFILE & USER DIRECTORY--------
@@ -253,7 +268,6 @@ fi
 # Copy ~/.config/
 
 
-# --------REBOOT--------
+# --------CLEAN UP & REBOOT--------
+# cleanup
 # reboot
-
-exit 0
