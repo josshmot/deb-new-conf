@@ -28,24 +28,25 @@ then
     exit 1
 fi
 
-# --------SETUP WORKING AREA--------
-echo -e "Setting up working area..."
+# --------SETUP SOURCE DIR & TEMP DIR--------
+echo -e "Setting up working environment..."
 
-# Create folder in /tmp, copy contents of iso there and set working directory
-working_dir=/tmp/deb-new-conf
-log_try mkdir $working_dir
-log_try cp -r ./ $working_dir/
-echo -e "-> Created '$working_dir' and copied files from source"
+# Set source directory to the iso/usb, and create temp directory in /tmp
+source_dir=./
+temp_dir=/tmp/deb-new-conf
+log_try mkdir $temp_dir
+echo -e "-> Assigned source directory '$source_dir'"
+echo -e "-> Created temporary directory '$temp_dir'"
 
 # --------WIFI SPEED FIX--------
 echo -e "Copying wifi speed fix..."
-log_try cp $working_dir/res/iwlwifi.conf /etc/modprobe.d/iwlwifi.conf
+log_try cp $source_dir/res/iwlwifi.conf /etc/modprobe.d/iwlwifi.conf
 
 # --------GRUB CONFIG--------
 echo -e "Setting up grub defaults..."
 
 # Copy GRUB config & run update-grub
-log_try cp $working_dir/res/grub_default /etc/default/grub
+log_try cp $source_dir/res/grub_default /etc/default/grub
 echo -e "-> Copied new grub config file: grub will now update..."
 log_try update-grub
 echo -e "---> Grub updated!"
@@ -54,7 +55,7 @@ echo -e "---> Grub updated!"
 echo -e "Configuring apt and nala..."
 
 # Copy apt sources.list
-log_try cp $working_dir/res/apt_sources.list /etc/apt/sources.list
+log_try cp $source_dir/res/apt_sources.list /etc/apt/sources.list
 echo -e "-> Copied new sources.list"
 
 # Add i386 architecture
@@ -89,12 +90,12 @@ echo -e "Setting up git..."
 log_try nala install git -y
 echo -e "-> Installed git"
 
-gcm_bin_url=$(cat $working_dir/config/gcm_bin_url)
+gcm_bin_url=$(cat $source_dir/config/gcm_bin_url)
 gcm_bin_fname=$(basename "$gcm_bin_url")
-log_try wget -P "$working_dir" "$gcm_bin_url"
+log_try wget -P "$temp_dir" "$gcm_bin_url"
 echo -e "-> Downloaded GCM"
 
-log_try nala install $working_dir/$gcm_bin_fname -y
+log_try nala install $temp_dir/$gcm_bin_fname -y
 echo -e "-> Installed GCM"
 
 # Set git user.name & configure gcm
@@ -126,16 +127,16 @@ then
     # clone github repos to ~/repos/
     echo -e "-> Cloning repos:"
     log_try cd $home/repos
-    cat $working_dir/config/git_repos | while read repo_url
+    cat $source_dir/config/git_repos | while read repo_url
     do
         log_try git clone "$repo_url"
         echo -e "---> $repo_url"
     done
-    cd "$working_dir"
+    cd "$source_dir"
 
     # Download BASS binaries to ~/repos/extern/ and configure to run seamlessly with CVAS repo
     echo -e "-> Downloading BASS libraries for CVAS repo..."
-    cat $working_dir/config/bass24_liburls | while read bass24_url
+    cat $source_dir/config/bass24_liburls | while read bass24_url
     do
         # get zip filename and output dir
         bass24_zip=$(basename $bass24_url)
@@ -143,14 +144,14 @@ then
         echo -e "---> $bass24_dir"
 
         # download and unzip
-        log_try wget -P "$working_dir" "$bass24_url"
+        log_try wget -P "$temp_dir" "$bass24_url"
         echo -e "-----> Downloaded"
         log_try mkdir -p $bass24_dir
-        log_try unzip -d "$bass24_dir" "$working_dir"/"$bass24_zip"
+        log_try unzip -d "$bass24_dir" "$temp_dir"/"$bass24_zip"
         echo -e "-----> Unzipped"
 
         # copy libs to required directories
-        cat "$working_dir"/config/bass24_outdirs | while read bass24_outdir
+        cat "$source_dir"/config/bass24_outdirs | while read bass24_outdir
         do
             log_try mkdir -p "$home/$bass24_outdir"
             log_try cp -r "$bass24_dir"/libs/x86_64/. "$home/$bass24_outdir"
