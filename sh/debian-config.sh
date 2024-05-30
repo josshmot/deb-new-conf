@@ -11,7 +11,6 @@ echo -e "" >> "$logfile"
 echo -e "--------debian-config.sh--------" >> "$logfile"
 
 # --------CHECK ROOT--------
-echo -e ""
 echo -e "Verifying elevation to root..."
 
 # Verify this has root permissions
@@ -22,7 +21,6 @@ then
 fi
 
 # --------SETUP WORKING AREA--------
-echo -e ""
 echo -e "Setting up working area..."
 
 # Create folder in /tmp, copy contents of iso there and set working directory
@@ -32,7 +30,6 @@ cp -r ./ $working_dir/ &>> "$logfile"
 echo -e "-> Created '$working_dir' and copied files from source"
 
 # --------GRUB CONFIG--------
-echo -e ""
 echo -e "Setting up grub defaults..."
 
 # Copy GRUB config & run update-grub
@@ -48,7 +45,6 @@ fi
 echo -e "---> Grub updated!"
 
 # --------APT & NALA CONFIG--------
-echo -e ""
 echo -e "Configuring apt and nala..."
 
 # Copy apt sources.list
@@ -89,7 +85,6 @@ fi
 echo -e "---> Upgrade complete!"
 
 # --------INSTALL NVIDIA DRIVERS--------
-echo -e ""
 echo "Installing Nvidia drivers. This could take some time..."
 
 # Install nvidia-driver
@@ -102,7 +97,6 @@ fi
 echo -e "-> Nvidia drivers installed."
 
 # --------CLONE REPOS--------
-echo -e ""
 echo -e "Setting up git..."
 
 # Install git, gcm
@@ -148,7 +142,6 @@ git config --global credential.credentialStore secretservice &>> "$logfile"
 echo -e "-> Configured git credentials"
 
 # --------SETUP REPOS DIRECTORY--------
-echo -e ""
 
 # ONLY IF ~/repos/ DOESN'T ALREADY EXIST:
 if [[ ! -d "$home/repos" ]]
