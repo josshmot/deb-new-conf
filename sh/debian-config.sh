@@ -149,7 +149,7 @@ then
         cat "$working_dir"/config/bass24_outdirs | while read bass24_outdir
         do
             log_try mkdir -p "$home/$bass24_outdir"
-            log_try cp -r "$bass24_dir"/libx/x86_64/. "$home/$bass24_outdir"
+            log_try cp -r "$bass24_dir"/libs/x86_64/. "$home/$bass24_outdir"
             echo -e "-----> Copied into: $home/$bass24_outdir"
         done
     done
