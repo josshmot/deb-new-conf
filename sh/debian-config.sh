@@ -72,10 +72,10 @@ log_try nala upgrade -y
 echo -e "---> Upgrade complete!"
 
 # --------INSTALL NVIDIA DRIVERS--------
-echo "Installing Nvidia drivers. This could take some time..."
+echo "Installing Nvidia drivers (NOT REALLY SHHH). This could take some time..."
 
 # Install nvidia-driver
-log_try nala install nvidia-driver -y
+# log_try nala install nvidia-driver -y
 echo -e "-> Nvidia drivers installed."
 
 # --------CLONE REPOS--------
@@ -110,6 +110,10 @@ echo -e "-> Configured git credentials"
 if [[ ! -d "$home/repos" ]]
 then
     echo -e "Setting up repos directory..."
+
+    # Install unzip if we haven't already
+    log_try nala install unzip -y
+    echo -e "-> Installed unzip"
     
     # mkdir ~/repos/extern/ if it doesn't already exist
     log_try mkdir -p $home/repos/extern
