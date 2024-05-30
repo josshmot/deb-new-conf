@@ -37,6 +37,10 @@ log_try mkdir $working_dir
 log_try cp -r ./ $working_dir/
 echo -e "-> Created '$working_dir' and copied files from source"
 
+# --------WIFI SPEED FIX--------
+echo -e "Copying wifi speed fix..."
+log_try cp $working_dir/res/iwlwifi.conf /etc/modprobe.d/iwlwifi.conf
+
 # --------GRUB CONFIG--------
 echo -e "Setting up grub defaults..."
 
