@@ -47,7 +47,7 @@ fi
 echo -e "Setting up working environment..."
 
 # Set source directory to the iso/usb, and create temp directory in /tmp
-source_dir=.
+source_dir=$(pwd)
 temp_dir=/tmp/deb-new-conf
 log_try mkdir $temp_dir
 echo -e "-> Assigned source directory '$source_dir'"
