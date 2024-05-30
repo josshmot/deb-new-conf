@@ -6,7 +6,7 @@ then
     exit
 fi
 
-# --------CHECK HOME DIR PROVIDED--------
+# --------SETUP HOME DIR--------
 if [[ $# != 1 ]]
 then
     echo -e "User directory not provided! Aborting!"
@@ -14,8 +14,6 @@ then
 fi
 
 home=$1
-echo $home
-exit
 
 # --------SETUP WORKING AREA--------
 echo "Setting up working area..."
