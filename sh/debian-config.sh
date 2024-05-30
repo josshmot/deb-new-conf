@@ -62,9 +62,9 @@ echo -e "Setting up grub defaults..."
 
 # Copy GRUB config & run update-grub
 log_try cp $source_dir/res/grub_default /etc/default/grub
-echo -e "-> Copied new grub config file: grub will now update..."
+echo -e -n "-> Copied new grub config file: grub will now update..."
 log_try update-grub
-echo -e "---> Grub updated!"
+echo -e "Done!"
 
 # --------APT & NALA CONFIG--------
 echo -e "Configuring apt and nala..."
@@ -78,40 +78,43 @@ log_try dpkg --add-architecture i386
 echo -e "-> Added x86 architecture"
 
 # apt update && install nala
-echo -e "-> Updating apt package lists..."
+echo -e -n "-> Updating apt package lists..."
 log_try apt update
-echo -e "---> Package lists updated!"
+echo -e "Done!"
 
-echo -e "-> Installing nala..."
+echo -e -n "-> Installing nala..."
 log_try apt install nala -y
-echo -e "---> Nala installed!"
+echo -e "Done!"
 
 # Perform apt upgrade
-echo "-> Upgrading packages..."
+echo -e -n "-> Upgrading packages..."
 log_try nala upgrade -y
-echo -e "---> Upgrade complete!"
+echo -e "Done!"
 
 # --------INSTALL NVIDIA DRIVERS--------
-echo "Installing Nvidia drivers (NOT REALLY SHHH). This could take some time..."
+echo -e -n "Installing Nvidia drivers (NOT REALLY SHHH). This could take some time..."
 
 # Install nvidia-driver
 # log_try nala install nvidia-driver -y
-echo -e "-> Nvidia drivers installed."
+echo -e "Done!"
 
 # --------CLONE REPOS--------
 echo -e "Setting up git..."
 
 # Install git, gcm
+echo -e -n "-> Installing git..."
 log_try nala install git -y
-echo -e "-> Installed git"
+echo -e "Done!"
 
+echo -e -n "-> Downloading GCM..."
 gcm_bin_url=$(cat $source_dir/config/gcm_bin_url)
 gcm_bin_fname=$(basename "$gcm_bin_url")
 log_try wget -P "$temp_dir" "$gcm_bin_url"
-echo -e "-> Downloaded GCM"
+echo -e "Done!"
 
+echo -e -n "-> Installing GCM..."
 log_try nala install $temp_dir/$gcm_bin_fname -y
-echo -e "-> Installed GCM"
+echo -e "Done!"
 
 # Set git user.name & configure gcm
 log_try git config --global user.name josshmot
@@ -144,8 +147,9 @@ then
     log_try cd $home/repos
     cat $source_dir/config/git_repos | while read repo_url
     do
+        echo -e -n "      $repo_url..."
         log_try git clone "$repo_url"
-        echo -e "---> $repo_url"
+        echo -e "Done!"
     done
     cd "$source_dir"
 
@@ -156,21 +160,23 @@ then
         # get zip filename and output dir
         bass24_zip=$(basename $bass24_url)
         bass24_dir=$home/repos/extern/${bass24_zip%.*}
-        echo -e "---> $bass24_dir"
 
         # download and unzip
+        echo -e -n "      Downloading $bass24_dir..."
         log_try wget -P "$temp_dir" "$bass24_url"
-        echo -e "-----> Downloaded"
+        echo -e "Done!"
         log_try mkdir -p $bass24_dir
+        echo -e -n "      Unzipping $bass24_dir..."
         log_try unzip -d "$bass24_dir" "$temp_dir"/"$bass24_zip"
-        echo -e "-----> Unzipped"
+        echo -e "Done!"
+
 
         # copy libs to required directories
         cat "$source_dir"/config/bass24_outdirs | while read bass24_outdir
         do
             log_try mkdir -p "$home/$bass24_outdir"
             log_try cp -r "$bass24_dir"/libs/x86_64/. "$home/$bass24_outdir"
-            echo -e "-----> Copied into: $home/$bass24_outdir"
+            echo -e "      Copied into: $home/$bass24_outdir"
         done
     done
 else
