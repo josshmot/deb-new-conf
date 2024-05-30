@@ -38,7 +38,13 @@ echo -e "Setting up grub defaults..."
 # Copy GRUB config & run update-grub
 cp ./res/grub_default /etc/default/grub
 echo -e "-> Copied new grub config file: grub will now update..."
-update-grub
+update-grub 2>/dev/null
+if [[ $? != 0 ]]
+then
+    echo -e "An error occurred, aborting!"
+    exit
+fi
+
 echo -e "---> Grub updated!"
 
 # --------APT & NALA CONFIG--------
@@ -55,16 +61,31 @@ echo -e "-> Added x86 architecture"
 
 # apt update && install nala
 echo -e "-> Updating apt package lists..."
-apt update 2>/dev/null >/dev/null
+apt update 2>/dev/null
+if [[ $? != 0 ]]
+then
+    echo -e "An error occurred, aborting!"
+    exit
+fi
 echo -e "---> Package lists updated!"
 
 echo -e "-> Installing nala..."
-apt install nala -y 2>/dev/null >/dev/null
+apt install nala -y 2>/dev/null
+if [[ $? != 0 ]]
+then
+    echo -e "An error occurred, aborting!"
+    exit
+fi
 echo -e "---> Nala installed!"
 
 # Perform apt upgrade
 echo "-> Upgrading packages..."
-apt upgrade -y 2>/dev/null >/dev/null
+apt upgrade -y 2>/dev/null
+if [[ $? != 0 ]]
+then
+    echo -e "An error occurred, aborting!"
+    exit
+fi
 echo -e "---> Upgrade complete!"
 
 # --------INSTALL NVIDIA DRIVERS--------
@@ -72,7 +93,12 @@ echo -e ""
 echo "Installing Nvidia drivers. This could take some time..."
 
 # Install nvidia-driver
-apt install nvidia-driver -y 2>/dev/null >/dev/null
+apt install nvidia-driver -y 2>/dev/null
+if [[ $? != 0 ]]
+then
+    echo -e "An error occurred, aborting!"
+    exit
+fi
 echo -e "-> Nvidia drivers installed."
 
 # --------CLONE REPOS--------
@@ -80,14 +106,29 @@ echo -e ""
 echo -e "Setting up git..."
 
 # Install git, gcm
-apt install git -y 2>/dev/null >/dev/null
+apt install git -y 2>/dev/null
+if [[ $? != 0 ]]
+then
+    echo -e "An error occurred, aborting!"
+    exit
+fi
 echo -e "-> Installed git"
 
 gcm_bin_url=$(cat ./config/gcm_bin_url)
 gcm_bin_fname=$(basename "$gcm_bin_url")
-wget -P "$working_dir" "$gcm_bin_url"
+wget -P "$working_dir" "$gcm_bin_url" 2>/dev/null
+if [[ $? != 0 ]]
+then
+    echo -e "An error occurred, aborting!"
+    exit
+fi
 echo -e "-> Downloaded GCM"
-apt install ./tmp/"$gcm_bin_fname" -y 2>/dev/null >/dev/null
+apt install ./tmp/"$gcm_bin_fname" -y 2>/dev/null
+if [[ $? != 0 ]]
+then
+    echo -e "An error occurred, aborting!"
+    exit
+fi
 echo -e "-> Installed GCM"
 
 # Set git user.name & configure gcm
@@ -95,7 +136,12 @@ git config --global user.name josshmot
 git config --global user.email $(cat ./offline/github_email)
 echo -e "-> Configured git username and email"
 
-git-credential-manager configure
+git-credential-manager configure 2>/dev/null
+if [[ $? != 0 ]]
+then
+    echo -e "An error occurred, aborting!"
+    exit
+fi
 
 git config --global credential.credentialStore secretservice
 
@@ -118,7 +164,12 @@ then
     cd $home/repos
     cat "$working_dir"/config/git_repos | while read repo_url
     do
-        git clone "$repo_url"
+        git clone "$repo_url" 2>/dev/null
+        if [[ $? != 0 ]]
+        then
+            echo -e "An error occurred, aborting!"
+            exit
+        fi
         echo -e "---> $repo_url"
     done
     cd "$working_dir"
@@ -133,10 +184,20 @@ then
         echo -e "---> $bass24_dir"
 
         # download and unzip
-        wget -P "$working_dir" "$bass24_url"
+        wget -P "$working_dir" "$bass24_url" 2>/dev/null
+        if [[ $? != 0 ]]
+        then
+            echo -e "An error occurred, aborting!"
+            exit
+        fi
         echo -e "-----> Downloaded"
         mkdir -p $bass24_dir
-        unzip -d "$bass24_dir" "$working_dir"/"$bass24_zip"
+        unzip -d "$bass24_dir" "$working_dir"/"$bass24_zip" 2>/dev/null
+        if [[ $? != 0 ]]
+        then
+            echo -e "An error occurred, aborting!"
+            exit
+        fi
         echo -e "-----> Unzipped"
 
         # copy libs to required directories
@@ -144,6 +205,11 @@ then
         do
             mkdir -p "$home/$bass24_outdir"
             cp "$bass24_dir"/libx/x86_64/. "$home/$bass24_outdir"
+            if [[ $? != 0 ]]
+            then
+                echo -e "An error occurred, aborting!"
+                exit
+            fi
             echo -e "-----> Copied into: $home/$bass24_outdir"
         done
     done
