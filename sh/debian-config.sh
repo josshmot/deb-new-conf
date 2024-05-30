@@ -123,7 +123,7 @@ then
     exit
 fi
 echo -e "-> Downloaded GCM"
-nala install ./tmp/"$gcm_bin_fname" -y 1>/dev/null
+nala install $working_dir/$gcm_bin_fname -y 1>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
