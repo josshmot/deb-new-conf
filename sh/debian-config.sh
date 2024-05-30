@@ -1,114 +1,154 @@
 # --------CHECK ROOT--------
+echo -e ""
+echo -e "Verifying elevation to root..."
+
 # Verify this has root permissions
 if [[ $(id -u) != 0 ]]
 then
-    echo -e "This script requires root permisions to run. Please run as root or with the sudo command!"
+    echo -e "!! This script requires root permisions to run. Please run as root or with the sudo command!"
     exit
 fi
 
 # --------SETUP HOME DIR--------
+echo -e ""
+echo -e "Verifying home directory has been passed..."
+
 if [[ $# != 1 ]]
 then
-    echo -e "User directory not provided! Aborting!"
+    echo -e "!! User directory not provided! Aborting!"
     exit
 fi
 
 home=$1
 
 # --------SETUP WORKING AREA--------
-echo "Setting up working area..."
+echo -e ""
+echo -e "Setting up working area..."
 
 # Create folder in /tmp, copy contents of iso there and set working directory
 working_dir=/tmp/deb-new-conf
 mkdir $working_dir
 cp -r ./ $working_dir/
-echo -e "Created '$working_dir' and copied files from source."
+echo -e "-> Created '$working_dir' and copied files from source"
 
 # --------GRUB CONFIG--------
-echo "Setting up grub defaults..."
+echo -e ""
+echo -e "Setting up grub defaults..."
 
 # Copy GRUB config & run update-grub
 cp ./res/grub_default /etc/default/grub
+echo -e "-> Copied new grub config file: grub will now update..."
 update-grub
+echo -e "---> Grub updated!"
 
 # --------APT & NALA CONFIG--------
-echo "Configuring apt and nala..."
+echo -e ""
+echo -e "Configuring apt and nala..."
 
 # Copy apt sources.list
 cp ./res/apt_sources.list /etc/apt/sources.list
+echo -e "-> Copied new sources.list"
 
 # Add i386 architecture
 dpkg --add-architecture i386
+echo -e "-> Added x86 architecture"
 
 # apt update && install nala
-apt update 2>/dev/null >/dev/null; apt install nala -y 2>/dev/null >/dev/null
+echo -e "-> Updating apt package lists..."
+apt update 2>/dev/null >/dev/null
+echo -e "---> Package lists updated!"
+
+echo -e "-> Installing nala..."
+apt install nala -y 2>/dev/null >/dev/null
+echo -e "---> Nala installed!"
 
 # Perform apt upgrade
-echo "Upgrading packages..."
+echo "-> Upgrading packages..."
 apt upgrade -y 2>/dev/null >/dev/null
+echo -e "---> Upgrade complete!"
 
 # --------INSTALL NVIDIA DRIVERS--------
-echo "Installing Nvidia drivers..."
+echo -e ""
+echo "Installing Nvidia drivers. This could take some time..."
 
 # Install nvidia-driver
 apt install nvidia-driver -y 2>/dev/null >/dev/null
+echo -e "-> Nvidia drivers installed."
 
 # --------CLONE REPOS--------
-echo "Setting up git..."
+echo -e ""
+echo -e "Setting up git..."
 
 # Install git, gcm
 apt install git -y 2>/dev/null >/dev/null
+echo -e "-> Installed git"
 
 gcm_bin_url=$(cat ./config/gcm_bin_url)
 gcm_bin_fname=$(basename "$gcm_bin_url")
 wget -P "$working_dir" "$gcm_bin_url"
+echo -e "-> Downloaded GCM"
 apt install ./tmp/"$gcm_bin_fname" -y 2>/dev/null >/dev/null
+echo -e "-> Installed GCM"
 
 # Set git user.name & configure gcm
 git config --global user.name josshmot
 git config --global user.email $(cat ./offline/github_email)
+echo -e "-> Configured git username and email"
 
 git-credential-manager configure
 
 git config --global credential.credentialStore secretservice
 
+echo -e "-> Configured git credentials"
+
+# --------SETUP REPOS DIRECTORY--------
+echo -e ""
+
 # ONLY IF ~/repos/ DOESN'T ALREADY EXIST:
 if [[ ! -d "~/repos" ]]
 then
-    echo "Setting up repos directory..."
+    echo -e "Setting up repos directory..."
     
     # mkdir ~/repos/extern/ if it doesn't already exist
     mkdir -p ~/repos/extern
+    echo -e "-> Created ~/repos/ and ~/repos/extern/"
 
     # clone github repos to ~/repos/
+    echo -e "-> Cloning repos:"
     cd ~/repos
     cat "$working_dir"/config/git_repos | while read repo_url
     do
         git clone "$repo_url"
+        echo -e "---> $repo_url"
     done
     cd "$working_dir"
 
     # Download BASS binaries to ~/repos/extern/ and configure to run seamlessly with CVAS repo
+    echo -e "-> Downloading BASS libraries for CVAS repo..."
     cat "$working_dir"/config/bass24_liburls | while read bass24_url
     do
         # get zip filename and output dir
         bass24_zip=$(basename $bass24_url)
         bass24_dir=~/repos/extern/${bass24_zip%.*}
+        echo -e "---> $bass24_dir"
 
         # download and unzip
         wget -P "$working_dir" "$bass24_url"
+        echo -e "-----> Downloaded"
         mkdir -p $bass24_dir
         unzip -d "$bass24_dir" "$working_dir"/"$bass24_zip"
+        echo -e "-----> Unzipped"
 
         # copy libs to required directories
         cat "$working_dir"/config/bass24_outdirs | while read bass24_outdir
         do
             mkdir -p "$bass24_outdir"
             cp "$bass24_dir"/libx/x86_64/. "$bass24_outdir"
+            echo -e "-----> Copied into: $bass24_outdir"
         done
     done
 else
-    echo "Repos directory already exists. Skipping."
+    echo -e "Repos directory already exists. Skipping."
 fi
 
 # --------INSTALL ASUSCTL--------
