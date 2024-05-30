@@ -45,7 +45,7 @@ log_try cp $working_dir/res/iwlwifi.conf /etc/modprobe.d/iwlwifi.conf
 echo -e "Setting up grub defaults..."
 
 # Copy GRUB config & run update-grub
-log_try cp ./res/grub_default /etc/default/grub
+log_try cp $working_dir/res/grub_default /etc/default/grub
 echo -e "-> Copied new grub config file: grub will now update..."
 log_try update-grub
 echo -e "---> Grub updated!"
@@ -54,7 +54,7 @@ echo -e "---> Grub updated!"
 echo -e "Configuring apt and nala..."
 
 # Copy apt sources.list
-log_try cp ./res/apt_sources.list /etc/apt/sources.list
+log_try cp $working_dir/res/apt_sources.list /etc/apt/sources.list
 echo -e "-> Copied new sources.list"
 
 # Add i386 architecture
@@ -89,7 +89,7 @@ echo -e "Setting up git..."
 log_try nala install git -y
 echo -e "-> Installed git"
 
-gcm_bin_url=$(cat ./config/gcm_bin_url)
+gcm_bin_url=$(cat $working_dir/config/gcm_bin_url)
 gcm_bin_fname=$(basename "$gcm_bin_url")
 log_try wget -P "$working_dir" "$gcm_bin_url"
 echo -e "-> Downloaded GCM"
@@ -126,7 +126,7 @@ then
     # clone github repos to ~/repos/
     echo -e "-> Cloning repos:"
     log_try cd $home/repos
-    cat "$working_dir"/config/git_repos | while read repo_url
+    cat $working_dir/config/git_repos | while read repo_url
     do
         log_try git clone "$repo_url"
         echo -e "---> $repo_url"
@@ -135,7 +135,7 @@ then
 
     # Download BASS binaries to ~/repos/extern/ and configure to run seamlessly with CVAS repo
     echo -e "-> Downloading BASS libraries for CVAS repo..."
-    cat "$working_dir"/config/bass24_liburls | while read bass24_url
+    cat $working_dir/config/bass24_liburls | while read bass24_url
     do
         # get zip filename and output dir
         bass24_zip=$(basename $bass24_url)
