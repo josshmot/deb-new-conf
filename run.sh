@@ -15,6 +15,7 @@ fi
 cd $(dirname "$0")
 
 # Acquire user directory
+echo -e ""
 echo -e "Acquiring user directory..."
 home=$(readlink -f ~/)
 echo -e "-> User directory is: '$home'"

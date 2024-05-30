@@ -34,6 +34,7 @@ log_try echo -e ""
 log_try echo -e "--------debian-config.sh--------"
 
 # --------CHECK ROOT--------
+echo -e ""
 echo -e "Verifying elevation to root..."
 
 # Verify this has root permissions
@@ -44,6 +45,7 @@ then
 fi
 
 # --------SETUP SOURCE DIR & TEMP DIR--------
+echo -e ""
 echo -e "Setting up working environment..."
 
 # Set source directory to the iso/usb, and create temp directory in /tmp
@@ -54,10 +56,12 @@ echo -e "-> Assigned source directory '$source_dir'"
 echo -e "-> Created temporary directory '$temp_dir'"
 
 # --------WIFI SPEED FIX--------
+echo -e ""
 echo -e "Copying wifi speed fix..."
 log_try cp $source_dir/res/iwlwifi.conf /etc/modprobe.d/iwlwifi.conf
 
 # --------GRUB CONFIG--------
+echo -e ""
 echo -e "Setting up grub defaults..."
 
 # Copy GRUB config & run update-grub
@@ -67,6 +71,7 @@ log_try update-grub
 echo -e "Done!"
 
 # --------APT & NALA CONFIG--------
+echo -e ""
 echo -e "Configuring apt and nala..."
 
 # Copy apt sources.list
@@ -92,6 +97,7 @@ log_try nala upgrade -y
 echo -e "Done!"
 
 # --------INSTALL NVIDIA DRIVERS--------
+echo -e ""
 echo -e -n "Installing Nvidia drivers (NOT REALLY SHHH). This could take some time..."
 
 # Install nvidia-driver
@@ -99,6 +105,7 @@ echo -e -n "Installing Nvidia drivers (NOT REALLY SHHH). This could take some ti
 echo -e "Done!"
 
 # --------CLONE REPOS--------
+echo -e ""
 echo -e "Setting up git..."
 
 # Install git, gcm
@@ -128,6 +135,7 @@ log_try git config --global credential.credentialStore secretservice
 echo -e "-> Configured git credentials"
 
 # --------SETUP REPOS DIRECTORY--------
+echo -e ""
 
 # ONLY IF ~/repos/ DOESN'T ALREADY EXIST:
 if [[ ! -d "$home/repos" ]]
