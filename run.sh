@@ -10,7 +10,7 @@ cd $(dirname "$0")
 
 # Acquire user directory
 echo -e "Acquiring user directory..."
-home = $(readlink -f ~/)
+home=$(readlink -f ~/)
 echo -e "User directory is: $home"
 
 # Elevate to root and run primary script in bash so that we can use our fancy bash commands
