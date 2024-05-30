@@ -2,13 +2,14 @@
 if [[ $# != 2 ]]
 then
     echo -e "!! User directory and/or logfile not provided! Aborting!"
-    exit
+    exit 2
 fi
 
 home=$1
 logfile=$2
-echo -e "" | tee -a $logfile &>/dev/null
-echo -e "--------debian-config.sh--------" | tee -a $logfile &>/dev/null
+echo -e "" | tee -a "$logfile" &>/dev/null
+echo -e "--------debian-config.sh--------" | tee -a "$logfile" &>/dev/null
+exit
 
 # --------CHECK ROOT--------
 echo -e "Verifying elevation to root..."
@@ -17,7 +18,7 @@ echo -e "Verifying elevation to root..."
 if [[ $(id -u) != 0 ]]
 then
     echo -e "!! This script requires root permisions to run. Please run as root or with the sudo command!"
-    exit
+    exit 1
 fi
 
 # --------SETUP WORKING AREA--------
@@ -39,7 +40,7 @@ update-grub | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
-    exit
+    exit 1
 fi
 
 echo -e "---> Grub updated!"
@@ -61,7 +62,7 @@ apt update | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
-    exit
+    exit 1
 fi
 echo -e "---> Package lists updated!"
 
@@ -70,7 +71,7 @@ apt install nala -y | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
-    exit
+    exit 1
 fi
 echo -e "---> Nala installed!"
 
@@ -80,7 +81,7 @@ nala upgrade -y | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
-    exit
+    exit 1
 fi
 echo -e "---> Upgrade complete!"
 
@@ -92,7 +93,7 @@ nala install nvidia-driver -y | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
-    exit
+    exit 1
 fi
 echo -e "-> Nvidia drivers installed."
 
@@ -104,7 +105,7 @@ nala install git -y | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
-    exit
+    exit 1
 fi
 echo -e "-> Installed git"
 
@@ -114,14 +115,14 @@ wget -P "$working_dir" "$gcm_bin_url" | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
-    exit
+    exit 1
 fi
 echo -e "-> Downloaded GCM"
 nala install $working_dir/$gcm_bin_fname -y | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
-    exit
+    exit 1
 fi
 echo -e "-> Installed GCM"
 
@@ -134,7 +135,7 @@ git-credential-manager configure | tee -a $logfile &>/dev/null
 if [[ $? != 0 ]]
 then
     echo -e "An error occurred, aborting!"
-    exit
+    exit 1
 fi
 
 git config --global credential.credentialStore secretservice | tee -a $logfile &>/dev/null
@@ -161,7 +162,7 @@ then
         if [[ $? != 0 ]]
         then
             echo -e "An error occurred, aborting!"
-            exit
+            exit 1
         fi
         echo -e "---> $repo_url"
     done
@@ -181,7 +182,7 @@ then
         if [[ $? != 0 ]]
         then
             echo -e "An error occurred, aborting!"
-            exit
+            exit 1
         fi
         echo -e "-----> Downloaded"
         mkdir -p $bass24_dir | tee -a $logfile &>/dev/null
@@ -189,7 +190,7 @@ then
         if [[ $? != 0 ]]
         then
             echo -e "An error occurred, aborting!"
-            exit
+            exit 1
         fi
         echo -e "-----> Unzipped"
 
@@ -201,7 +202,7 @@ then
             if [[ $? != 0 ]]
             then
                 echo -e "An error occurred, aborting!"
-                exit
+                exit 1
             fi
             echo -e "-----> Copied into: $home/$bass24_outdir"
         done
@@ -303,3 +304,5 @@ fi
 
 # --------REBOOT--------
 # reboot
+
+exit 0
