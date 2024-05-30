@@ -142,9 +142,9 @@ then
         # copy libs to required directories
         cat "$working_dir"/config/bass24_outdirs | while read bass24_outdir
         do
-            mkdir -p "$bass24_outdir"
-            cp "$bass24_dir"/libx/x86_64/. "$bass24_outdir"
-            echo -e "-----> Copied into: $bass24_outdir"
+            mkdir -p "$home/$bass24_outdir"
+            cp "$bass24_dir"/libx/x86_64/. "$home/$bass24_outdir"
+            echo -e "-----> Copied into: $home/$bass24_outdir"
         done
     done
 else
