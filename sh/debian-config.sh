@@ -192,10 +192,24 @@ else
 fi
 
 # --------INSTALL DOTNET--------
+echo -e ""
+echo -e "Installing dotnet..."
 
+echo -e -n "-> Adding support for Microsoft production packages..."
+log_try wget -P $temp_dir https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
+log_try dpkg -i $temp_dir/packages-microsoft-prod.deb
+echo -e "Done!"
+
+echo -e -n "-> Installing dotnet SDK..."
+log_try nala update
+log_try nala install dotnet-sdk-8.0 -y
+echo -e "Done!"
 
 # --------INSTALL KDE DESKTOP--------
-
+echo -e ""
+echo -e -n "Installing KDE Desktop if needed. This could take a very long time..."
+log_try nala install task-kde-desktop
+echo -e "Done!"
 
 # --------INSTALL ASUSCTL--------
 # Install asusctl dependancies
