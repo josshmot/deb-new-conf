@@ -4,6 +4,7 @@ log_try () {
     if [[ $? != 0 ]]
     then
         cleanup
+        echo -e "" # just in case the cursor's at the end of a line rather than the beginning
         exit 1
     fi
 }
@@ -211,7 +212,7 @@ echo -e "Done!"
 # --------INSTALL KDE DESKTOP--------
 echo -e ""
 echo -e -n "Installing KDE Desktop if needed. This could take a very long time..."
-log_try nala install task-kde-desktop
+log_try nala install task-kde-desktop -y
 echo -e "Done!"
 
 # --------INSTALL ASUSCTL--------
