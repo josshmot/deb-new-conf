@@ -263,12 +263,12 @@ log_try wget -P $temp_dir $envycontrol_url
 echo -e "Done!"
 
 echo -e -n "-> Installing envycontrol..."
-log_try nala install $tempdir/$(basename $envycontrol_url)
+log_try nala install $tempdir/$(basename $envycontrol_url) -y
 echo -e "Done!"
 
 # Install libnotify-bin
 echo -e -n "-> Installing libnotify-bin..."
-log_try nala install libnotify-bin
+log_try nala install libnotify-bin -y
 echo -e "Done!"
 
 # Copy envycontrol_autoswitch.sh & give exec permissions
@@ -288,11 +288,26 @@ log_try echo -e "%users\tALL=(ALL:ALL) NOPASSWD:\t/usr/local/sh/envycontrol_auto
 echo -e "-> Allowed script sudo execution without password in sudoers file"
 
 # --------INSTALL VSCODE--------
-# Download and install VSCode
+echo -e ""
+echo -e "Installing VSCode..."
 
+# Download and install VSCode
+echo -e -n "-> Downloading package..."
+log_try wget -P $temp_dir https://go.microsoft.com/fwlink/?LinkID=760868 -O vscode.deb
+echo -e "Donw!"
+
+echo -e -n "-> Installing package..."
+log_try nala install $temp_dir/vscode.deb -y
+echo -e "Done!"
 
 # Install vscode extensions
-
+echo -e "-> Installing extensions. This could take some time..."
+cat "$source_dir"/config/vscode_extenions | while read vscode_extension
+    do
+        echo -e -n "      $vscode_extension..."
+        log_try code --install-extension $vscode_extension
+        echo -e "Done!"
+    done
 
 # --------INSTALL ENIGMA--------
 # Install enigma dependancies
