@@ -226,9 +226,11 @@ echo -e "Done!"
 
 # Install rustup (with no user input?) & apply env to shell
 echo -e -n "-> Installing rustup..."
-log_try wget -P $temp_dir -O rustup-install.sh https://sh.rustup.rs
-log_try bash $temp_dir/rustup-install.sh -y
+log_try cd $temp_dir
+log_try wget -O rustup-install.sh https://sh.rustup.rs
+log_try bash rustup-install.sh -y
 log_try . $home/.cargo/env
+log_try cd $source_dir
 echo -e "Done!"
 
 # Remove ~/repos/extern/asusctl/ if it exists
