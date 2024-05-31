@@ -231,7 +231,6 @@ echo -e -n "-> Installing rustup..."
 log_try cd $temp_dir
 log_try wget -O rustup-install.sh https://sh.rustup.rs
 log_try sudo -u $uname bash rustup-install.sh -y
-log_try sudo -u $uname bash . $home/.cargo/env
 log_try cd $source_dir
 echo -e "Done!"
 
@@ -251,7 +250,7 @@ echo -e "Done!"
 # Build and install
 echo -e -n "-> Building asusctl. This could take some time..."
 log_try cd $home/repos/extern/asusctl
-log_try sudo -u $uname make # need to run this as the original user because for SOME REASON RUST ONLY INSTALLS FOR ONE USER...WTFTFWTTFWTFTFWT
+log_try sudo -u $uname env "PATH=$home/.cargo/bin:$PATH" make # need to run this as the original user because for SOME REASON RUST ONLY INSTALLS FOR ONE USER...WTFTFWTTFWTFTFWT
 log_try make install
 log_try cd $source_dir
 echo -e "Done!"
