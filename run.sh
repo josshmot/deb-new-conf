@@ -11,6 +11,9 @@ then
     exit
 fi
 
+# Clear console
+clear
+
 # Move working directory to location of this script
 cd $(dirname "$0")
 
