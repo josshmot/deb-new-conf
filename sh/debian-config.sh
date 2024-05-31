@@ -228,8 +228,8 @@ echo -e "Done!"
 echo -e -n "-> Installing rustup..."
 log_try cd $temp_dir
 log_try wget -O rustup-install.sh https://sh.rustup.rs
-log_try bash rustup-install.sh -y
-log_try . /root/.cargo/env # rust is installed to the root user directory in this case. not ideal, but the alternative is switching to another user somehow...
+log_try sudo -u $uid bash rustup-install.sh -y
+log_try . $home/.cargo/env
 log_try cd $source_dir
 echo -e "Done!"
 
