@@ -252,20 +252,40 @@ log_try cd $source_dir
 echo -e "Done!"
 
 # --------INSTALL GFX MODE SWITCH--------
-# Download and install envycontrol
+echo -e ""
+echo -e "Installing GFX Mode Switch..."
 
+# Download and install envycontrol
+log_try envycontrol_url=$(curl -s https://api.github.com/repos/bayasdev/envycontrol/releases/latest | grep browser_download_url | cut -d '"' -f 4)
+
+echo -e -n "-> Downloading envycontrol..."
+log_try wget -P $temp_dir $envycontrol_url
+echo -e "Done!"
+
+echo -e -n "-> Installing envycontrol..."
+log_try nala install $tempdir/$(basename $envycontrol_url)
+echo -e "Done!"
 
 # Install libnotify-bin
-
+echo -e -n "-> Installing libnotify-bin..."
+log_try nala install libnotify-bin
+echo -e "Done!"
 
 # Copy envycontrol_autoswitch.sh & give exec permissions
+if ! [[ -d /usr/local/sh ]]
+then
+    log_try mkdir -p /usr/local/sh
+    echo -e "-> Created /usr/local/sh/"
+fi
+log_try cp $source_dir/res/envycontrol_autoswitch.sh /usr/local/sh/envycontrol_autoswitch.sh
+echo -e "-> Copied envycontrol autoswitch script"
 
+log_try chmod +x /usr/local/sh/envycontrol_autoswitch.sh
+echo -e "-> Applied execution permissions"
 
 # Add permissions to sudoers file
-
-
-# Add .desktop applications if they don't already exist
-
+log_try echo -e "%users\tALL=(ALL:ALL) NOPASSWD:\t/usr/local/sh/envycontrol_autoswitch.sh" >> /etc/sudoers
+echo -e "-> Allowed script sudo execution without password in sudoers file"
 
 # --------INSTALL VSCODE--------
 # Download and install VSCode
