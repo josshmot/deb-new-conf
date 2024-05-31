@@ -94,8 +94,8 @@ log_try apt install nala -y
 echo -e "Done!"
 
 # Perform apt upgrade
-echo -e -n "-> Upgrading packages..."
-log_try nala upgrade -y
+echo -e -n "-> Upgrading packages (NOT REALLY SHHH)..."
+# log_try nala upgrade -y
 echo -e "Done!"
 
 # --------INSTALL NVIDIA DRIVERS--------
