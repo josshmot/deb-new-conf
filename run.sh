@@ -19,10 +19,10 @@ cd $(dirname "$0")
 
 # Acquire user directory
 echo -e ""
-echo -e "Acquiring user directory..."
-home=$(readlink -f ~/)
-echo -e "-> User directory is: '$home'"
-echo -e "Home directory: $home" &>> $logfile
+echo -e "Acquiring user ID..."
+uid=$(id -u)
+echo -e "-> User ID is: '$uid'"
+echo -e "Ran as user: $uid" &>> $logfile
 
 # Specify templogfile path
 templogfile=/tmp/deb-new-conf.log.tmp # We need this, as we can't write to the currently open log file from within debian-config.sh
@@ -30,7 +30,7 @@ templogfile=/tmp/deb-new-conf.log.tmp # We need this, as we can't write to the c
 # Elevate to root and run primary script in bash so that we can use our fancy bash commands
 echo -e ""
 echo -e "This script requires root access via sudo to install components. Please enter your password if requested."
-sudo bash ./sh/debian-config.sh $home $templogfile
+sudo bash ./sh/debian-config.sh $uid $templogfile
 configresult=$?
 
 # copy temp log file contents into log file (only if required)

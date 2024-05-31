@@ -22,14 +22,15 @@ cleanup () {
     rm -rf $temp_dir
 }
 
-# --------GET LOGFILE & USER DIRECTORY--------
+# --------GET LOGFILE & USER ID--------
 if [[ $# != 2 ]]
 then
-    echo -e "!! User directory and/or logfile not provided! Aborting!"
+    echo -e "!! User ID and/or logfile not provided! Aborting!"
     exit 2
 fi
 
-home=$1
+uid=$1
+home=$(eval echo ~$(id -nu $uid))
 logfile=$2
 log_try echo -e ""
 log_try echo -e "--------debian-config.sh--------"
