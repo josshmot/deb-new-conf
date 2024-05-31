@@ -226,7 +226,8 @@ echo -e "Done!"
 
 # Install rustup (with no user input?) & apply env to shell
 echo -e -n "-> Installing rustup..."
-log_try curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+log_try wget -P $temp_dir -O rustup-install.sh https://sh.rustup.rs
+log_try bash $temp_dir/rustup-install.sh -y
 log_try . $home/.cargo/env
 echo -e "Done!"
 
