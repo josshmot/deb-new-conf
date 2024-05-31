@@ -216,23 +216,40 @@ log_try nala install task-kde-desktop -y
 echo -e "Done!"
 
 # --------INSTALL ASUSCTL--------
+echo -e ""
+echo -e "Building and installing asusctl..."
+
 # Install asusctl dependancies
+echo -e -n "-> Installing dependancies..."
+log_try nala install curl make gcc pkg-config libudev-dev libseat-dev libxkbcommon-dev libinput-dev libgbm-dev -y
+echo -e "Done!"
 
-
-# Install rustup (with no user input?) & restart shell with 'bash'
-
+# Install rustup (with no user input?) & apply env to shell
+echo -e -n "-> Installing rustup..."
+log_try curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+log_try . $home/.cargo/env
+echo -e "Done!"
 
 # Remove ~/repos/extern/asusctl/ if it exists
+if [[ -d $home/repos/extern/asusctl ]]
+then
+    log_try rm -rf $home/repos/extern/asusctl
+    echo -e "-> Removed old asusctl repo"
+fi
 
+# Download and unpack asusctl to ~/repos/extern/
+echo -e -n "-> Cloning asusctl repo..."
+log_try cd $home/repos/extern
+log_try git clone https://gitlab.com/asus-linux/asusctl.git
+echo -e "Done!"
 
-# Download and unpack asusctl to ~/repos/extern/; build and install
-
-
-# Set system profile to 'balanced'
-
-
-# Copy startup script & add to cron
-
+# Build and install
+echo -e -n "-> Building asusctl. This could take some time..."
+log_try cd $home/repos/extern/asusctl
+log_try make
+log_try make install
+log_try cd $source_dir
+echo -e "Done!"
 
 # --------INSTALL GFX MODE SWITCH--------
 # Download and install envycontrol
