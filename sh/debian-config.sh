@@ -231,7 +231,7 @@ echo -e -n "-> Installing rustup..."
 log_try cd $temp_dir
 log_try wget -O rustup-install.sh https://sh.rustup.rs
 log_try sudo -u $uname bash rustup-install.sh -y
-log_try sudo -u $uname . $home/.cargo/env
+log_try sudo -u $uname bash . $home/.cargo/env
 log_try cd $source_dir
 echo -e "Done!"
 
