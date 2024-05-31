@@ -310,11 +310,42 @@ cat "$source_dir"/config/vscode_extenions | while read vscode_extension
     done
 
 # --------INSTALL ENIGMA--------
+echo -e ""
+echo -e "Building and installing Enigma"
+
 # Install enigma dependancies
+echo -e -n "-> Installing dependancies..."
+log_try nala install g++ libsdl2-dev libsdl2-ttf-dev libsdl2-mixer-dev libsdl2-image-dev libxerces-c-dev libcurlpp-dev imagemagick -y
+echo -e "Done!"
 
+# Download and unpack enigma to ~/repos/extern/
+enigma_url=$(cat $source_dir/config/enigma_url)
 
-# Download and unpack enigma to ~/repos/extern/; build and install
+echo -e -n "-> Downloading source..."
+log_try wget -P $temp_dir $enigma_url
+echo -e "Done!"
 
+echo -e -n "-> Extracting archive..."
+log_try tar -xf $temp_dir/$(basename $enigma_url) -C $home/repos/extern/
+echo -e "Done!"
+
+# Move to source directory and build
+log_try cd $home/repos/extern
+log_try cd $(ls | grep enigma)
+
+echo -e -n "-> Configuring build environment..."
+log_try ./configure
+echo -e "Done!"
+
+echo -e -n "-> Building Enigma. This could take some time..."
+log_try make -j$(nproc --all)
+echo -e "Done!"
+
+echo -e -n "-> Installing Enigma..."
+log_try make install
+echo -e "Done!"
+
+log_try cd $source_dir
 
 # --------INSTALL WINE--------
 # Install aptitude
