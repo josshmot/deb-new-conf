@@ -30,7 +30,8 @@ then
 fi
 
 uid=$1
-home=$(eval echo ~$(id -nu $uid))
+uname=$(id -nu $uid)
+home=$(eval echo ~$uname)
 logfile=$2
 log_try echo -e ""
 log_try echo -e "--------debian-config.sh--------"
@@ -229,7 +230,7 @@ echo -e "Done!"
 echo -e -n "-> Installing rustup..."
 log_try cd $temp_dir
 log_try wget -O rustup-install.sh https://sh.rustup.rs
-log_try sudo -u $uid bash rustup-install.sh -y
+log_try sudo -u $uname bash rustup-install.sh -y
 log_try . $home/.cargo/env
 log_try cd $source_dir
 echo -e "Done!"
