@@ -200,8 +200,11 @@ log_try wget -P $temp_dir https://packages.microsoft.com/config/debian/12/packag
 log_try dpkg -i $temp_dir/packages-microsoft-prod.deb
 echo -e "Done!"
 
-echo -e -n "-> Installing dotnet SDK..."
+echo -e -n "-> Updating package lists..."
 log_try nala update
+echo -e "Done!"
+
+echo -e -n "-> Installing dotnet SDK..."
 log_try nala install dotnet-sdk-8.0 -y
 echo -e "Done!"
 
