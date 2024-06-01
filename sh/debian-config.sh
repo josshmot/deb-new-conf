@@ -382,6 +382,10 @@ echo -e "Done!"
 # Copy RHEM wine script & give execution permissions
 
 
+# --------INSTALL SPOTIFY--------
+
+
+
 # --------INSTALL & CONFIGURE GENERAL UTILS--------
 # Install neofetch, fzf, vim, mpv, keepassxc, virt-manager
 
