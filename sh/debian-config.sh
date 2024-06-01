@@ -299,8 +299,10 @@ echo -e "Installing VSCode..."
 
 # Download and install VSCode
 echo -e -n "-> Downloading package..."
-log_try wget -P $temp_dir https://go.microsoft.com/fwlink/?LinkID=760868 -O vscode.deb
-echo -e "Donw!"
+log_try cd $temp_dir
+log_try wget -O vscode.deb https://go.microsoft.com/fwlink/?LinkID=760868
+log_try cd $source_dir
+echo -e "Done!"
 
 echo -e -n "-> Installing package..."
 log_try nala install $temp_dir/vscode.deb -y
