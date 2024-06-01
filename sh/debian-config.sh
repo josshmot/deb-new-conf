@@ -248,11 +248,11 @@ log_try git clone https://gitlab.com/asus-linux/asusctl.git
 echo -e "Done!"
 
 # Build and install
-echo -e -n "-> Building asusctl. This could take a very long time..."
+echo -e -n "-> Building asusctl (not actually SHHHH). This could take a very long time..."
 log_try cd $home/repos/extern/asusctl
 log_try chmod 777 -R $home/repos/extern/asusctl
-log_try sudo -u $uname env "PATH=$home/.cargo/bin:$PATH" make # need to run this as the original user because for SOME REASON RUST ONLY INSTALLS FOR ONE USER...WTFTFWTTFWTFTFWT
-log_try make install
+# log_try sudo -u $uname env "PATH=$home/.cargo/bin:$PATH" make # need to run this as the original user because for SOME REASON RUST ONLY INSTALLS FOR ONE USER...WTFTFWTTFWTFTFWT
+# log_try make install
 log_try cd $source_dir
 echo -e "Done!"
 
