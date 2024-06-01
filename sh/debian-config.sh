@@ -261,7 +261,7 @@ echo -e ""
 echo -e "Installing GFX Mode Switch..."
 
 # Download and install envycontrol
-log_try envycontrol_url=$(curl -s https://api.github.com/repos/bayasdev/envycontrol/releases/latest | grep browser_download_url | cut -d '"' -f 4)
+envycontrol_url=$(curl -s https://api.github.com/repos/bayasdev/envycontrol/releases/latest | grep browser_download_url | cut -d '"' -f 4)
 
 echo -e -n "-> Downloading envycontrol..."
 log_try wget -P $temp_dir $envycontrol_url
