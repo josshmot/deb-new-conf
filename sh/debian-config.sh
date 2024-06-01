@@ -359,6 +359,7 @@ log_try cd $source_dir
 echo -e "Installing Wine..."
 
 # Install aptitude
+echo -e ""
 echo -e -n "-> Installing Aptitude..."
 log_try nala install aptitude -y
 echo -e "Done!"
