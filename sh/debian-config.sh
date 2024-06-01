@@ -268,7 +268,7 @@ log_try wget -P $temp_dir $envycontrol_url
 echo -e "Done!"
 
 echo -e -n "-> Installing envycontrol..."
-log_try nala install $tempdir/$(basename $envycontrol_url) -y
+log_try nala install $temp_dir/$(basename $envycontrol_url) -y
 echo -e "Done!"
 
 # Install libnotify-bin
