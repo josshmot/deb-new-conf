@@ -1,5 +1,6 @@
 # Help function to automatically log output, and terminate script upon some failed command
 log_try () {
+    echo -e $@ &>> "$logfile"
     $@ &>> "$logfile"
     if [[ $? != 0 ]]
     then
