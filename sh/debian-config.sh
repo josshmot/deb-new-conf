@@ -310,7 +310,7 @@ echo -e "Done!"
 
 # Install vscode extensions
 echo -e "-> Installing extensions. This could take some time..."
-cat "$source_dir"/config/vscode_extenions | while read vscode_extension
+cat "$source_dir"/config/vscode_extensions | while read vscode_extension
     do
         echo -e -n "      $vscode_extension..."
         log_try code --install-extension $vscode_extension
