@@ -353,11 +353,24 @@ echo -e "Done!"
 log_try cd $source_dir
 
 # --------INSTALL WINE--------
-# Install aptitude
+echo -e "Installing Wine..."
 
+# Install aptitude
+echo -e -n "-> Installing Aptitude..."
+log_try nala install aptitude -y
+echo -e "Done!"
 
 # Install winehq-stable
+log_try wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
+echo -e "-> Added WineHQ sources"
 
+echo -e -n "-> Updating package lists..."
+log_try nala update
+echo -e "Done!"
+
+echo -e -n "-> Installing WineHQ..."
+log_try aptitude install winehq -y
+echo -e "Done!"
 
 # -------INSTALL STEAM & GAMES--------
 # Install steam-installer
