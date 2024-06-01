@@ -229,10 +229,8 @@ echo -e "Done!"
 
 # Install rustup (with no user input?) & apply env to shell
 echo -e -n "-> Installing rustup..."
-log_try cd $temp_dir
-log_try wget -O rustup-install.sh https://sh.rustup.rs
-log_try sudo -u $uname bash rustup-install.sh -y
-log_try cd $source_dir
+log_try wget -O $temp_dir/rustup-install.sh https://sh.rustup.rs
+log_try sudo -u $uname bash $temp_dir/rustup-install.sh -y
 echo -e "Done!"
 
 # Remove ~/repos/extern/asusctl/ if it exists
@@ -299,9 +297,7 @@ echo -e "Installing VSCode..."
 
 # Download and install VSCode
 echo -e -n "-> Downloading package..."
-log_try cd $temp_dir
-log_try wget -O vscode.deb https://go.microsoft.com/fwlink/?LinkID=760868
-log_try cd $source_dir
+log_try wget -O $temp_dir/vscode.deb https://go.microsoft.com/fwlink/?LinkID=760868
 echo -e "Done!"
 
 echo -e -n "-> Installing package..."
