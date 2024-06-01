@@ -361,6 +361,10 @@ log_try nala install aptitude -y
 echo -e "Done!"
 
 # Install winehq-stable
+log_try mkdir -pm755 /etc/apt/keyrings
+log_try wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+echo -e "-> Added WineHQ repository key"
+
 log_try wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
 echo -e "-> Added WineHQ sources"
 
