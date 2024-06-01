@@ -373,7 +373,7 @@ log_try nala update
 echo -e "Done!"
 
 echo -e -n "-> Installing WineHQ..."
-log_try aptitude install winehq -y
+log_try aptitude install winehq-stable -y
 echo -e "Done!"
 
 # -------INSTALL STEAM & GAMES--------
